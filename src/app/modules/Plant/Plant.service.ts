@@ -1,22 +1,36 @@
+import { query } from 'express';
 import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../error/AppError';
 import { courseSearchAbleFields } from './Plant.const';
 import { TCreateProduct } from './Plant.interface';
 import { productModel } from './Plant.model';
 
-const getAllProductIntoDB = async(query: Record<string, unknown>) => {
-  const courseQuery = new QueryBuilder(
-    productModel.find(),
-    query,
-  )
+const getAllProductIntoDB = async (query: Record<string, unknown>) => {
+  const courseQuery = new QueryBuilder(productModel.find(), query)
     .searching(courseSearchAbleFields)
     .filter()
     .sort()
     .paginate()
     .fields()
-  const result = await courseQuery.modelQuery
+    .priceFilter()
+  const result = await courseQuery.modelQuery;
+  return result;
+};
+
+const filterPriceRangeIntoDB = async (query: {minPrice : number, maxPrice:number}) => {
+  const minPrice = query.minPrice;
+  const maxPrice = query.maxPrice;
+
+  const filter = {
+    price: {
+      $gt: minPrice,
+      $lt: maxPrice,
+    },
+  }
+
+  const result = await productModel.find(filter)
   return result
-}
+};
 
 const createProductIntoDB = async (payload: TCreateProduct) => {
   const result = await productModel.create(payload);
@@ -48,15 +62,16 @@ const updateProductIntoDB = async (
   return result;
 };
 
-const getSingleProductIntoDB = async(id: string) =>{
-  const result = await productModel.findById(id)
-  return result
-}
+const getSingleProductIntoDB = async (id: string) => {
+  const result = await productModel.findById(id);
+  return result;
+};
 
 export const productService = {
   getAllProductIntoDB,
+  filterPriceRangeIntoDB,
   createProductIntoDB,
   updateProductIntoDB,
   deleteProductIntoDB,
-  getSingleProductIntoDB
+  getSingleProductIntoDB,
 };
