@@ -12,16 +12,16 @@ const getAllProduct = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
-const priceFilter = catchAsync(async (req: Request, res: Response) => {
-  const priceRange = req.body
-  const result = await productService.filterPriceRangeIntoDB(priceRange);
-  console.log(result);
+const getProductCount = catchAsync(async (req: Request, res: Response) => {
+  const result = await productService.getProduceCountIntoDB();
+
   res.status(200).json({
     success: true,
-    massage: ' Product retrieve successfully',
+    massage: 'Product Count successfully',
     data: result,
   });
 });
+
 const getSingleProduct = catchAsync(async (req: Request, res: Response) => {
   const {productId} = req.params
   const result = await productService.getSingleProductIntoDB(productId);
@@ -69,7 +69,7 @@ const deleteProduct = catchAsync(async (req: Request, res: Response) => {
 export const productController = {
   getAllProduct,
   createProduct,
-  priceFilter,
+  getProductCount,
   updateProduct,
   deleteProduct,
   getSingleProduct

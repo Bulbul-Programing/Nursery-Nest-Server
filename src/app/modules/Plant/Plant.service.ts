@@ -17,20 +17,10 @@ const getAllProductIntoDB = async (query: Record<string, unknown>) => {
   return result;
 };
 
-const filterPriceRangeIntoDB = async (query: {minPrice : number, maxPrice:number}) => {
-  const minPrice = query.minPrice;
-  const maxPrice = query.maxPrice;
-
-  const filter = {
-    price: {
-      $gt: minPrice,
-      $lt: maxPrice,
-    },
-  }
-
-  const result = await productModel.find(filter)
+const getProduceCountIntoDB = async()=>{
+  const result = await productModel.estimatedDocumentCount()
   return result
-};
+}
 
 const createProductIntoDB = async (payload: TCreateProduct) => {
   const result = await productModel.create(payload);
@@ -69,7 +59,7 @@ const getSingleProductIntoDB = async (id: string) => {
 
 export const productService = {
   getAllProductIntoDB,
-  filterPriceRangeIntoDB,
+  getProduceCountIntoDB,
   createProductIntoDB,
   updateProductIntoDB,
   deleteProductIntoDB,
