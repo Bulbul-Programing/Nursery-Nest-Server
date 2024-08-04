@@ -17,6 +17,13 @@ const getAllProductIntoDB = async (query: Record<string, unknown>) => {
   return result;
 };
 
+const getMultipleProductIntoDB = async (payload : string[]) => {
+  const result = await productModel.find({
+    _id : {$in : payload}
+  })
+  return result
+}
+
 const getProduceCountIntoDB = async()=>{
   const result = await productModel.estimatedDocumentCount()
   return result
@@ -64,4 +71,5 @@ export const productService = {
   updateProductIntoDB,
   deleteProductIntoDB,
   getSingleProductIntoDB,
+  getMultipleProductIntoDB,
 };

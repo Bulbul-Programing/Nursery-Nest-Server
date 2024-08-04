@@ -5,5 +5,6 @@ export type TCreateProduct = {
   stock: number;
   category: string;
   images : string[],
-  rating : number
+  rating : number,
+  stockStatus : 'In' | 'Out'
 };

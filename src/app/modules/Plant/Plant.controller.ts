@@ -12,6 +12,16 @@ const getAllProduct = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const getMultipleProduct = catchAsync(async (req: Request, res: Response) => {
+  const productsId = req.body
+  const result = await productService.getMultipleProductIntoDB(productsId);
+
+  res.status(200).json({
+    success: true,
+    massage: 'Product retrieve successfully',
+    data: result,
+  });
+});
 const getProductCount = catchAsync(async (req: Request, res: Response) => {
   const result = await productService.getProduceCountIntoDB();
 
@@ -69,6 +79,7 @@ const deleteProduct = catchAsync(async (req: Request, res: Response) => {
 export const productController = {
   getAllProduct,
   createProduct,
+  getMultipleProduct,
   getProductCount,
   updateProduct,
   deleteProduct,
