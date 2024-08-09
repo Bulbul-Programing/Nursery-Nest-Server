@@ -20,6 +20,6 @@ const createOrderSchema = new Schema<TCreateOrder>({
   subdistrict: { type: String, required: true },
   totalPrice: { type: String, required: true },
   products: { type: [productInfo], required: true },
-});
+},{timestamps : true});
 
 export const OrderModel = model<TCreateOrder>('order', createOrderSchema);
