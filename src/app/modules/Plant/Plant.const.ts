@@ -1,4 +1,1 @@
-export const courseSearchAbleFields: string[] = [
-    'name',
-    'description',
-  ]
+export const productSearchAbleFields: string[] = ['name', 'description'];

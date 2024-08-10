@@ -1,35 +1,38 @@
 import { query } from 'express';
 import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../error/AppError';
-import { courseSearchAbleFields } from './Plant.const';
+import { productSearchAbleFields } from './Plant.const';
 import { TCreateProduct } from './Plant.interface';
 import { productModel } from './Plant.model';
+import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 
 const getAllProductIntoDB = async (query: Record<string, unknown>) => {
-  const courseQuery = new QueryBuilder(productModel.find(), query)
-    .searching(courseSearchAbleFields)
+  const productQuery = new QueryBuilder(productModel.find(), query)
+    .searching(productSearchAbleFields)
     .filter()
     .sort()
     .paginate()
     .fields()
-    .priceFilter()
-  const result = await courseQuery.modelQuery;
+    .priceFilter();
+  const result = await productQuery.modelQuery;
   return result;
 };
 
-const getMultipleProductIntoDB = async (payload : string[]) => {
+const getMultipleProductIntoDB = async (payload: string[]) => {
   const result = await productModel.find({
-    _id : {$in : payload}
-  })
-  return result
-}
+    _id: { $in: payload },
+  });
+  return result;
+};
 
-const getProduceCountIntoDB = async()=>{
-  const result = await productModel.estimatedDocumentCount()
-  return result
-}
+const getProduceCountIntoDB = async () => {
+  const result = await productModel.estimatedDocumentCount();
+  return result;
+};
 
-const createProductIntoDB = async (payload: TCreateProduct) => {
+const createProductIntoDB = async (file : any, payload: TCreateProduct) => {
+  const fileName = `${payload.name}`
+  const {secure_url} = await sendImageToCloudinary(fileName, file.path) as any
   const result = await productModel.create(payload);
   return result;
 };

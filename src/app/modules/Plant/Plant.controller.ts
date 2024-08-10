@@ -45,7 +45,8 @@ const getSingleProduct = catchAsync(async (req: Request, res: Response) => {
 
 const createProduct = catchAsync(async (req: Request, res: Response) => {
   const plantData = req.body;
-  const result = await productService.createProductIntoDB(plantData);
+  const file = req.file
+  const result = await productService.createProductIntoDB(file, plantData);
 
   res.status(200).json({
     success: true,
