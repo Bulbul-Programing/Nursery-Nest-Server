@@ -26,7 +26,7 @@ const createPlaneValidationSchema = z.object({
     rating: z.number({
       required_error: 'rating is required',
       invalid_type_error: 'rating must be a Number',
-    })
+    }).optional()
   }),
 });
 const updatePlaneValidationSchema = z.object({

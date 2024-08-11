@@ -2,7 +2,6 @@ import express, { NextFunction, Request, Response } from 'express';
 import validateRequest from '../../middleware/validateRequestData';
 import { createProductValidation } from './plant.validation';
 import { productController } from './Plant.controller';
-import { upload } from '../../utils/sendImageToCloudinary';
 
 const router = express.Router();
 
@@ -12,11 +11,6 @@ router.post('/getMultipleProduct', productController.getMultipleProduct);
 router.get('/:productId', productController.getSingleProduct);
 router.post(
   '/',
-  upload.single('file'),
-  (req: Request, res: Response, next: NextFunction) => {
-    req.body = JSON.parse(req.body.data);
-    next();
-  },
   validateRequest(createProductValidation.createPlaneValidationSchema),
   productController.createProduct,
 );

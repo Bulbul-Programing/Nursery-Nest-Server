@@ -8,7 +8,7 @@ const createProductSchema = new Schema<TCreateProduct>({
   stock: { type: Number, required: true },
   category: { type: String, required: true },
   images: { type: [String], required: true },
-  rating : {type : Number, required : true, max : 5},
+  rating : {type : Number, max : 5},
   stockStatus : {type: String, enum:['In', 'Out'], default:'In'}
 },{timestamps : true});
 

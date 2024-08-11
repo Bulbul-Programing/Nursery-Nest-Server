@@ -32,7 +32,7 @@ const globalErrorHandler = (
   else if(err.name === 'ValidationError'){
     const simpleError = handleMongooseError(err)
     statusCode = simpleError?.statusCode,
-    message = simpleError?.statusCode,
+    message = simpleError?.message,
     errorSources = simpleError?.errorSources
   }
   else if(err.name === 'CastError'){

@@ -30,9 +30,7 @@ const getProduceCountIntoDB = async () => {
   return result;
 };
 
-const createProductIntoDB = async (file : any, payload: TCreateProduct) => {
-  const fileName = `${payload.name}`
-  const {secure_url} = await sendImageToCloudinary(fileName, file.path) as any
+const createProductIntoDB = async ( payload: TCreateProduct) => {
   const result = await productModel.create(payload);
   return result;
 };

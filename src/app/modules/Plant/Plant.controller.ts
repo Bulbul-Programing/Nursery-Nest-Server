@@ -3,7 +3,7 @@ import catchAsync from '../../utils/catchAsync';
 import { productService } from './Plant.service';
 
 const getAllProduct = catchAsync(async (req: Request, res: Response) => {
-  const query = req.query
+  const query = req.query;
   const result = await productService.getAllProductIntoDB(query);
 
   res.status(200).json({
@@ -13,7 +13,7 @@ const getAllProduct = catchAsync(async (req: Request, res: Response) => {
   });
 });
 const getMultipleProduct = catchAsync(async (req: Request, res: Response) => {
-  const productsId = req.body
+  const productsId = req.body;
   const result = await productService.getMultipleProductIntoDB(productsId);
 
   res.status(200).json({
@@ -33,7 +33,7 @@ const getProductCount = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getSingleProduct = catchAsync(async (req: Request, res: Response) => {
-  const {productId} = req.params
+  const { productId } = req.params;
   const result = await productService.getSingleProductIntoDB(productId);
 
   res.status(200).json({
@@ -45,8 +45,7 @@ const getSingleProduct = catchAsync(async (req: Request, res: Response) => {
 
 const createProduct = catchAsync(async (req: Request, res: Response) => {
   const plantData = req.body;
-  const file = req.file
-  const result = await productService.createProductIntoDB(file, plantData);
+  const result = await productService.createProductIntoDB(plantData);
 
   res.status(200).json({
     success: true,
@@ -84,5 +83,5 @@ export const productController = {
   getProductCount,
   updateProduct,
   deleteProduct,
-  getSingleProduct
+  getSingleProduct,
 };
