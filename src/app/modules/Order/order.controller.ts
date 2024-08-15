@@ -18,7 +18,7 @@ const getAllOrder = catchAsync(async (req: Request, res: Response) => {
   const result = await orderService.getAllOrderIntoDB(query);
 
   res.status(200).json({
-    success: true,
+    success: false,
     massage: 'Order retrieve successfully',
     data: result,
   });
