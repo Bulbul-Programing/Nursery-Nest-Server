@@ -42,7 +42,23 @@ const getAllOrderIntoDB = async (query: Record<string, unknown>) => {
   return result;
 };
 
+const updateOrderIntoDB = async (
+  id: string,
+  payload: Partial<TCreateOrder>,
+) => {
+  const isExistOrder = await OrderModel.findOne({ _id: id });
+  if (!isExistOrder) {
+    throw new AppError(400, 'This Order is not found!');
+  }
+  const result = await OrderModel.findByIdAndUpdate(id, payload, {
+    new: true,
+    runValidators: true,
+  });
+  return result;
+};
+
 export const orderService = {
   createOrderIntoDB,
   getAllOrderIntoDB,
+  updateOrderIntoDB
 };
