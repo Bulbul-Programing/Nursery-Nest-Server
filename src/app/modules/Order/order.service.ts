@@ -6,18 +6,20 @@ import { TCreateOrder } from './order.interface';
 import { OrderModel } from './order.model';
 
 const createOrderIntoDB = async (payload: TCreateOrder) => {
-  console.log(payload);
-  payload.products.map(async(product) => {
-    const isExistProduct = await productModel.findById(product.id)
-    if(!isExistProduct){
-      throw new AppError(404, 'product Not fount')
-    }
-    if(product.quantity > isExistProduct.stock){
-      throw new AppError(500, 'Product stock is les then your quantity!')
-    }
-  })
-  // const result = OrderModel.create(payload);
-  // return result;
+  await Promise.all(
+    payload.products.map(async (product) => {
+      const isExistProduct = await productModel.findById(product.id);
+      if (!isExistProduct) {
+        throw new AppError(404, 'Product not found');
+      }
+      if (product.quantity > isExistProduct.stock) {
+        throw new AppError(500, 'Product stock is less than your quantity!');
+      }
+      await productModel.findOneAndUpdate({_id : product.id}, {stock : isExistProduct.stock - product.quantity, stockStatus : isExistProduct.stock === product.quantity ? 'Out' : 'In'})
+    }),
+  );
+  const result = OrderModel.create(payload);
+  return result;
 };
 
 const getAllOrderIntoDB = async (query: Record<string, unknown>) => {

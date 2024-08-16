@@ -14,5 +14,6 @@ export type TCreateOrder = {
     phone : string,
     subdistrict : string,
     totalPrice : string,
-    products : TProductInfo[]
+    products : TProductInfo[],
+    status ?: ['Pending', 'Confirmed', 'Cancel']
 }
