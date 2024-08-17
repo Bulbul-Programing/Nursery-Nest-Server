@@ -15,7 +15,13 @@ const createOrderIntoDB = async (payload: TCreateOrder) => {
       if (product.quantity > isExistProduct.stock) {
         throw new AppError(500, 'Product stock is less than your quantity!');
       }
-      await productModel.findOneAndUpdate({_id : product.id}, {stock : isExistProduct.stock - product.quantity, stockStatus : isExistProduct.stock === product.quantity ? 'Out' : 'In'})
+      await productModel.findOneAndUpdate(
+        { _id: product.id },
+        {
+          stock: isExistProduct.stock - product.quantity,
+          stockStatus: isExistProduct.stock === product.quantity ? 'Out' : 'In',
+        },
+      );
     }),
   );
   const result = OrderModel.create(payload);
@@ -57,8 +63,64 @@ const updateOrderIntoDB = async (
   return result;
 };
 
+const getLastSevenDaysOrderIntoDB = async () => {
+  const getLast7Days = () => {
+    const today = new Date();
+    const days = [];
+
+    for (let i = 0; i < 7; i++) {
+      const day = new Date(today);
+      day.setDate(today.getDate() - i);
+      days.push(day.toISOString().slice(0, 10));
+    }
+
+    return days.reverse();
+  };
+
+  const today = new Date();
+  const sevenDaysAgo = new Date(today);
+
+  sevenDaysAgo.setDate(today.getDate() - 7);
+  sevenDaysAgo.setHours(0, 0, 0, 0);
+
+  const endOfToday = new Date(today);
+
+  const orders = await OrderModel.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: sevenDaysAgo, $lte: endOfToday },
+      },
+    },
+    {
+      $addFields: {
+        day: {
+          $dateToString: { format: '%Y-%m-%d', date: '$createdAt' },
+        },
+      },
+    },
+    {
+      $group: {
+        _id: '$day',
+        totalSales: { $sum: { $toDouble: '$totalPrice' } },
+        count: { $sum: 1 },
+      },
+    },
+    {
+      $sort: { _id: 1 },
+    },
+  ]);
+  const last7Days = getLast7Days();
+
+  const result = last7Days.map((day) => {
+    const dayData = orders.find((order) => order._id === day);
+    return dayData ? dayData : { _id: day, totalSales: 0, count: 0 };
+  });
+  return result;
+};
+
 export const orderService = {
   createOrderIntoDB,
   getAllOrderIntoDB,
-  updateOrderIntoDB
+  updateOrderIntoDB,
+  getLastSevenDaysOrderIntoDB,
 };

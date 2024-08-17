@@ -36,9 +36,19 @@ const updateOrder = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getLastSevenDaysOrder = catchAsync(async (req: Request, res: Response) => {
+  const result = await orderService.getLastSevenDaysOrderIntoDB();
+  res.status(200).json({
+    success: true,
+    massage: 'last seven days order retrieve successfully',
+    data: result,
+  });
+});
+
 
 export const orderController = {
     createOrder,
     getAllOrder,
-    updateOrder
+    updateOrder,
+    getLastSevenDaysOrder
 }

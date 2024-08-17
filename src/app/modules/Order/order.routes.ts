@@ -8,5 +8,7 @@ const router = express.Router()
 router.post('/create-order', validateRequest(orderValidation.CreateOrderValidationSchema), orderController.createOrder)
 router.get('/', orderController.getAllOrder)
 router.patch('/:id', validateRequest(orderValidation.UpdateOrderValidationSchema), orderController.updateOrder)
+router.get('/last-seven-days', orderController.getLastSevenDaysOrder)
+
 
 export const orderRouter = router
